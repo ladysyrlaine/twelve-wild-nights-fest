@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Twelve Wild Nights Fest — Card Generator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0a;
+            --bg-mid: #1a0a0a;
+            --red-wine: #6b1a1a;
+            --red-mid: #8b2525;
+            --red-bright: #c0392b;
+            --cream: #e8e0d4;
+            --cream-light: #f5f0e8;
+            --silver: #b0b8c1;
+            --silver-light: #d4dce4;
+            --text-main: #e8e0d4;
+            --text-dim: #b0b8c1;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(ellipse at top, #1a0505 0%, #0a0a0a 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 15% 20%, rgba(107,26,26,0.12) 0%, transparent 50%),
+                radial-gradient(circle at 85% 80%, rgba(107,26,26,0.08) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .container { max-width: 940px; margin: 0 auto; position: relative; z-index: 1; }
+
+        /* ───── HEADER ───── */
+        header {
+            text-align: center;
+            padding: 44px 24px 36px;
+            margin-bottom: 32px;
+            background: rgba(10,0,0,0.7);
+            border: 2px solid var(--red-wine);
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(192,57,43,0.12);
+            position: relative;
+            overflow: hidden;
+        }
+        header::before {
+            content: '🐐';
+            position: absolute;
+            font-size: 130px;
+            opacity: 0.04;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+        }
+
+        .lang-selector {
+            position: absolute;
+            top: 16px; right: 16px;
+            display: flex; gap: 8px; z-index: 10;
+        }
+        .lang-btn {
+            padding: 7px 14px;
+            background: rgba(107,26,26,0.4);
+            border: 1px solid var(--red-wine);
+            border-radius: 6px;
+            color: var(--silver);
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            font-size: 0.85em;
+            transition: all 0.25s;
+        }
+        .lang-btn:hover { border-color: var(--red-bright); }
+        .lang-btn.active {
+            background: var(--red-wine);
+            border-color: var(--red-bright);
+            color: var(--cream);
+            font-weight: 600;
+        }
+
+        h1 {
+            font-family: 'Cinzel', serif;
+            font-size: 2.6em;
+            color: var(--cream);
+            text-shadow: 0 0 24px rgba(192,57,43,0.4), 0 4px 10px rgba(0,0,0,0.9);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        .deco { display: inline-block; font-size: 1.1em; margin: 0 8px; }
+        .subtitle {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.15em;
+            color: var(--silver);
+            font-style: italic;
+            letter-spacing: 1px;
+        }
+
+        /* ───── PANELS ───── */
+        .panel {
+            background: rgba(20,5,5,0.7);
+            border: 1px solid var(--red-wine);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 24px;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .panel-title {
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            color: var(--red-bright);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid rgba(107,26,26,0.4);
+            padding-bottom: 10px;
+        }
+
+        /* ───── LOGIN PANEL ───── */
+        #loginPanel {
+            text-align: center;
+        }
+        .login-intro {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.1em;
+            color: var(--silver);
+            font-style: italic;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+        .login-intro strong {
+            color: var(--cream);
+            font-style: normal;
+        }
+
+        /* ───── FORM ───── */
+        .form-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            font-family: 'Cinzel', serif;
+            font-size: 0.82em;
+            color: var(--red-bright);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 13px 16px;
+            background: rgba(5,0,0,0.8);
+            border: 1.5px solid var(--red-wine);
+            border-radius: 8px;
+            color: var(--cream);
+            font-family: 'Outfit', sans-serif;
+            font-size: 1em;
+            transition: all 0.3s;
+        }
+        input:focus {
+            outline: none;
+            border-color: var(--red-bright);
+            box-shadow: 0 0 14px rgba(192,57,43,0.25);
+        }
+        input::placeholder { color: rgba(176,184,193,0.4); }
+
+        /* ───── CATEGORIES ───── */
+        .cat-section { margin-bottom: 10px; }
+
+        .cat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 13px 18px;
+            background: rgba(5,0,0,0.7);
+            border: 1.5px solid var(--red-wine);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            user-select: none;
+        }
+        .cat-header:hover { background: rgba(107,26,26,0.25); border-color: var(--red-mid); }
+        .cat-header.open {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background: rgba(107,26,26,0.3);
+            border-color: var(--red-bright);
+        }
+        .cat-header.obligatory { border-left: 3px solid var(--red-bright); }
+
+        .cat-left { display: flex; align-items: center; gap: 10px; }
+        .cat-name {
+            font-family: 'Cinzel', serif;
+            font-size: 0.95em;
+            color: var(--cream);
+        }
+        .cat-badge {
+            font-size: 0.72em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .badge-req {
+            background: rgba(192,57,43,0.25);
+            border: 1px solid var(--red-bright);
+            color: var(--red-bright);
+        }
+        .badge-opt {
+            background: rgba(176,184,193,0.1);
+            border: 1px solid rgba(176,184,193,0.3);
+            color: var(--silver);
+        }
+        .cat-count { font-size: 0.85em; color: var(--silver); font-family: 'Outfit', sans-serif; }
+        .expand-icon { color: var(--silver); transition: transform 0.3s; }
+        .cat-header.open .expand-icon { transform: rotate(180deg); }
+
+        .cat-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease;
+            background: rgba(5,0,0,0.5);
+            border: 1.5px solid var(--red-bright);
+            border-top: none;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .cat-body.open { max-height: 700px; overflow-y: auto; }
+        .cat-body-inner { padding: 18px; }
+
+        .cat-body::-webkit-scrollbar { width: 7px; }
+        .cat-body::-webkit-scrollbar-track { background: rgba(5,0,0,0.5); }
+        .cat-body::-webkit-scrollbar-thumb { background: var(--red-wine); border-radius: 4px; }
+
+        .cat-controls { display: flex; gap: 8px; margin-bottom: 14px; }
+        .cat-ctrl-btn {
+            padding: 5px 12px;
+            font-size: 0.8em;
+            font-family: 'Outfit', sans-serif;
+            background: rgba(107,26,26,0.3);
+            border: 1px solid var(--red-wine);
+            border-radius: 6px;
+            color: var(--silver);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .cat-ctrl-btn:hover { background: rgba(107,26,26,0.6); color: var(--cream); }
+
+        .min-notice {
+            font-size: 0.8em;
+            color: rgba(176,184,193,0.6);
+            font-style: italic;
+            margin-bottom: 12px;
+        }
+
+        .picks-notice {
+            font-size: 0.82em;
+            color: rgba(192,100,70,0.85);
+            font-style: italic;
+            margin-bottom: 12px;
+            padding: 6px 10px;
+            background: rgba(107,26,26,0.15);
+            border-left: 2px solid var(--red-wine);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .subcategory-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.95em;
+            color: var(--silver);
+            font-style: italic;
+            margin: 12px 0 8px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(107,26,26,0.3);
+        }
+
+        .prompts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+            gap: 10px;
+        }
+
+        .prompt-item {
+            display: flex; align-items: flex-start; gap: 8px;
+        }
+        .prompt-item input[type="checkbox"] {
+            width: 17px; height: 17px;
+            cursor: pointer;
+            accent-color: var(--red-bright);
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        .prompt-item label {
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            text-transform: none;
+            font-size: 0.9em;
+            letter-spacing: 0;
+            margin: 0;
+            color: var(--text-main);
+            transition: color 0.2s;
+            line-height: 1.3;
+        }
+        .prompt-item:hover label { color: var(--cream-light); }
+
+        /* ───── BUTTONS ───── */
+        .btn-primary {
+            padding: 16px 28px;
+            font-family: 'Cinzel', serif;
+            font-size: 1.1em;
+            font-weight: 600;
+            color: var(--cream);
+            background: linear-gradient(135deg, var(--red-wine) 0%, var(--red-mid) 100%);
+            border: 2px solid var(--red-bright);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 6px 20px rgba(107,26,26,0.4);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(107,26,26,0.6);
+            border-color: var(--cream);
+        }
+        .btn-primary:active { transform: translateY(0); }
+        .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
+        .btn-primary.full { width: 100%; margin-top: 24px; }
+
+        .btn-secondary {
+            padding: 12px 24px;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95em;
+            color: var(--cream);
+            background: rgba(107,26,26,0.4);
+            border: 1.5px solid var(--red-wine);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .btn-secondary:hover { background: rgba(107,26,26,0.7); border-color: var(--red-bright); }
+
+        /* ───── MESSAGES ───── */
+        .msg-error {
+            background: rgba(100,10,10,0.5);
+            border: 1.5px solid var(--red-bright);
+            color: #ff9090;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        .msg-success {
+            background: rgba(10,50,10,0.5);
+            border: 1.5px solid #4a8a4a;
+            color: #90d090;
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.95em;
+        }
+        .msg-loading {
+            background: rgba(107,26,26,0.2);
+            border: 1.5px solid var(--red-wine);
+            color: var(--silver);
+            padding: 14px 18px;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-size: 0.95em;
+            font-style: italic;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+
+        /* ───── USER INFO BAR ───── */
+        .user-bar {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 18px;
+            background: rgba(107,26,26,0.2);
+            border: 1px solid var(--red-wine);
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .user-bar .username {
+            font-family: 'Cinzel', serif;
+            color: var(--cream);
+            font-size: 1em;
+        }
+        .user-bar .uses-left {
+            margin-left: auto;
+            font-size: 0.85em;
+            color: var(--silver);
+        }
+        .uses-pill {
+            display: inline-block;
+            padding: 2px 10px;
+            background: rgba(107,26,26,0.5);
+            border: 1px solid var(--red-wine);
+            border-radius: 10px;
+            font-size: 0.85em;
+            color: var(--cream);
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* ───── RESULT ───── */
+        #resultSection { display: none; text-align: center; margin-top: 32px; }
+        #cardCanvas {
+            max-width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.8), 0 0 30px rgba(107,26,26,0.4);
+            border: 2px solid var(--red-wine);
+            margin-bottom: 20px;
+        }
+        .download-row {
+            display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;
+            margin-top: 16px;
+        }
+
+        /* ───── FOOTER ───── */
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            color: rgba(176,184,193,0.4);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.7em; }
+            .prompts-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <div class="lang-selector">
+            <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+            <button class="lang-btn" onclick="setLang('es',this)">ES</button>
+        </div>
+        <h1>
+            <span class="deco">🕯️</span>
+            The Twelve Wild Nights
+            <span class="deco">🕯️</span>
+        </h1>
+        <p class="subtitle" id="hSubtitle">Card Generator · Fest 2026–2027</p>
+    </header>
+
+    <!-- ══════════ LOGIN ══════════ -->
+    <div id="loginPanel" class="panel">
+        <div class="login-intro" id="loginIntro">
+            Enter your <strong>AO3 or Tumblr username</strong> to access the card generator.<br>
+            <small style="font-size:0.85em; opacity:0.7;">Only registered participants can generate cards. Contact the organizer if you have issues.</small>
+        </div>
+        <div class="form-group">
+            <label id="loginLabel">Your username</label>
+            <input type="text" id="loginUsername" placeholder="@yourname" style="text-align:center; font-size:1.1em;" autocomplete="off">
+        </div>
+        <button class="btn-primary" style="width:100%;" id="loginBtn" onclick="checkUser()">
+            🌙 Enter
+        </button>
+        <div id="loginMsg"></div>
+    </div>
+
+    <!-- ══════════ MAIN FORM ══════════ -->
+    <div id="mainForm" style="display:none;">
+
+        <!-- User info bar -->
+        <div class="user-bar" id="userBar">
+            <span>🌙</span>
+            <span class="username" id="userBarName"></span>
+            <span class="uses-left" id="userBarUses"></span>
+        </div>
+
+        <div class="panel">
+            <div class="panel-title" id="pPrompts">Select Your Prompts</div>
+            <p class="min-notice" id="minNoticeTop">Obligatory lists: select at least 3 prompts each. Optional lists: if you include one, select at least 3 prompts.</p>
+            <div id="categoriesContainer"></div>
+        </div>
+
+        <button class="btn-primary full" id="generateBtn" onclick="generateCard()">
+            🌙 Generate My Card 🌙
+        </button>
+        <div id="formMsg"></div>
+    </div>
+
+    <!-- ══════════ RESULT ══════════ -->
+    <div id="resultSection">
+        <canvas id="cardCanvas"></canvas>
+        <div class="download-row">
+            <button class="btn-primary" onclick="downloadCard('cardCanvas', 'standard')">⬇️ Download Card</button>
+            <button class="btn-secondary" onclick="goBackToForm()" id="btnAnother"></button>
+        </div>
+
+        <div id="specialSection" style="display:none; margin-top:40px;">
+            <div style="text-align:center; margin-bottom:16px;">
+                <span style="font-family:'Cinzel',serif; font-size:11px; letter-spacing:4px; color:#6b1a1a; text-transform:uppercase;">❄ Wild Nights Special ❄</span>
+            </div>
+            <canvas id="specialCanvas"></canvas>
+            <div class="download-row" style="margin-top:16px;">
+                <button class="btn-primary" onclick="downloadCard('specialCanvas', 'special')">⬇️ Download Special Card</button>
+            </div>
+        </div>
+
+        <p style="margin-top:24px; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:0.9em;" id="resultNote">
+            Share your card on Tumblr with the tag #twelvewildnightsfest
+        </p>
+    </div>
+
+    <footer>🕯️ The Twelve Wild Nights Fest · syrlainefests · LadySyrlaine 🕯️</footer>
+</div>
+
+<script>
+// ════════════════════════════════════════════════
+// ⚠️  CAMBIA ESTA URL POR LA DE TU GOOGLE APPS SCRIPT
+// ════════════════════════════════════════════════
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwW4gg58Rpn-oGXaCj-O3u_0NBYcOPsfJmpcHJPsSiKuYAK-lfDc6tvNY5tKxUl8ZNT2A/exec';
+
+// ════════════════════════════════════════════════
+// TRANSLATIONS
+// ════════════════════════════════════════════════
+let lang = 'en';
+let currentUser = null; // { username, usesLeft }
+
+const i18n = {
+    en: {
+        subtitle: 'Card Generator · Fest 2026–2027',
+        loginIntro: 'Enter your <strong>AO3 or Tumblr username</strong> to access the card generator.<br><small style="font-size:0.85em;opacity:0.7;">Only registered participants can generate cards. Contact the organizer if you have issues.</small>',
+        loginLabel: 'Your username',
+        loginBtn: '🌙 Enter',
+        pSocial: 'Social (optional)',
+        lTumblr: 'Tumblr',
+        lDiscord: 'Discord',
+        pPrompts: 'Select Your Prompts',
+        minNoticeTop: 'The app will randomly pick 1–2 prompts per category for your card. Select the prompts you are open to receiving — the more you mark, the more variety!',
+        generateBtn: '🌙 Generate My Card 🌙',
+        resultNote: 'Share your card on Tumblr with the tag #twelvewildnightsfest',
+        btnAnother: '↩ Generate Another Card',
+        usesLeft: 'cards left',
+        catOblig: 'OBLIGATORY',
+        catOpt: 'OPTIONAL',
+        countSel: ' selected',
+        allSelect: 'Select all',
+        allDeselect: 'Deselect all',
+        errOblig: 'You must select at least 3 prompts from: ',
+        errOptMin: 'If you select from an optional list, minimum 3 required. List: ',
+        errNoPrompts: 'You have not selected any prompts.',
+        cardSectionOblig: 'FEST PROMPTS',
+        cardSectionOpt: 'OPTIONAL PROMPTS',
+        errNotFound: '❌ Username not found. Make sure you are registered for the fest.',
+        errNoUses: '❌ You have no cards left. Contact the organizer if you think this is an error.',
+        errServer: '❌ Could not connect to the server. Try again in a moment.',
+        loading: '🌙 Checking registration...',
+        cardTitle: 'The Twelve Wild Nights Fest',
+        footerCard: '🕯️ The Twelve Wild Nights Fest · Dec 25 – Jan 6 · syrlainefests 🕯️',
+        downloadName: 'TwelveWildNights-Card',
+    },
+    es: {
+        subtitle: 'Generador de Fichas · Fest 2026–2027',
+        loginIntro: 'Introduce tu <strong>username de AO3 o Tumblr</strong> para acceder al generador.<br><small style="font-size:0.85em;opacity:0.7;">Solo los participantes registrados pueden generar fichas. Contacta a la organizadora si tienes problemas.</small>',
+        loginLabel: 'Tu username',
+        loginBtn: '🌙 Entrar',
+        pSocial: 'Redes (opcional)',
+        lTumblr: 'Tumblr',
+        lDiscord: 'Discord',
+        pPrompts: 'Selecciona tus Prompts',
+        minNoticeTop: 'La app elegirá aleatoriamente 1–2 prompts por categoría para tu ficha. Marca los prompts que estás dispuesta/o a recibir — ¡cuantos más marques, más variedad!',
+        generateBtn: '🌙 Generar Mi Ficha 🌙',
+        resultNote: 'Comparte tu ficha en Tumblr con el tag #twelvewildnightsfest',
+        btnAnother: '↩ Generar Otra Ficha',
+        usesLeft: 'fichas restantes',
+        catOblig: 'OBLIGATORIA',
+        catOpt: 'OPCIONAL',
+        countSel: ' seleccionados',
+        allSelect: 'Seleccionar todo',
+        allDeselect: 'Deseleccionar todo',
+        errOblig: 'Debes seleccionar al menos 3 prompts de: ',
+        errOptMin: 'Si seleccionas de una lista opcional, mínimo 3 requeridos. Lista: ',
+        errNoPrompts: 'No has seleccionado ningún prompt.',
+        cardSectionOblig: 'PROMPTS DEL FEST',
+        cardSectionOpt: 'PROMPTS OPCIONALES',
+        errNotFound: '❌ Username no encontrado. Asegúrate de estar registrada/o en el fest.',
+        errNoUses: '❌ No te quedan fichas disponibles. Contacta a la organizadora si crees que es un error.',
+        errServer: '❌ No se pudo conectar con el servidor. Inténtalo de nuevo en un momento.',
+        loading: '🌙 Comprobando registro...',
+        cardTitle: 'The Twelve Wild Nights Fest',
+        footerCard: '🕯️ The Twelve Wild Nights Fest · 25 dic – 6 ene · syrlainefests 🕯️',
+        downloadName: 'TwelveWildNights-Ficha',
+    }
+};
+
+function t(key) { return i18n[lang][key] || i18n['en'][key] || key; }
+
+function setLang(l, btn) {
+    lang = l;
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    applyTranslations();
+}
+
+function applyTranslations() {
+    document.getElementById('hSubtitle').textContent = t('subtitle');
+    document.getElementById('loginIntro').innerHTML = t('loginIntro');
+    document.getElementById('loginLabel').textContent = t('loginLabel');
+    document.getElementById('loginBtn').innerHTML = t('loginBtn');
+    document.getElementById('pSocial').textContent = t('pSocial');
+    document.getElementById('lTumblr').textContent = t('lTumblr');
+    document.getElementById('lDiscord').textContent = t('lDiscord');
+    document.getElementById('pPrompts').textContent = t('pPrompts');
+    document.getElementById('minNoticeTop').textContent = t('minNoticeTop');
+    document.getElementById('generateBtn').textContent = t('generateBtn');
+    document.getElementById('resultNote').textContent = t('resultNote');
+    document.getElementById('btnAnother').textContent = t('btnAnother');
+    updateAllCounts();
+    if (currentUser) updateUserBar();
+}
+
+// ════════════════════════════════════════════════
+// PROMPT DATA
+// ════════════════════════════════════════════════
+const categories = [
+    {
+        id: 'genre', icon: '📖', name: 'Genre', obligatory: true,
+        prompts: [
+            'Romance','Horror','Mystery','Fantasy','Thriller','Drama','Comedy','Slice of Life',
+            'Adventure','Action','Supernatural','Historical','Magic Realism','Portal Fantasy/Isekai',
+            'Time Travel','Sci-fi','Gothic','Epistolary'
+        ]
+    },
+    {
+        id: 'tone', icon: '🎭', name: 'Tone / Feel', obligatory: true,
+        prompts: [
+            'Fluff','Angst','Hurt/Comfort','Dark','Bittersweet','Crack/Humor','Comfort without Hurt',
+            'Whump','Melancholic','Angst with a Happy Ending','Fluff and Smut','Smut','Smut with Plot',
+            'Smut without Plot','Fluff and Angst','Fluff and Humor','Dark Comedy/Black Humor',
+            'Angst with Comfort','Crack Treated Seriously','Hurt/No Comfort','Cozy Horror',
+            'Tragic Comedy','Angsty Fluff','Tooth-Rotting Fluff','Heavy Angst','Lighthearted/Soft'
+        ]
+    },
+    {
+        id: 'winter', icon: '❄️', name: 'Winter / Rauhnächte Prompts', obligatory: true,
+        subcategories: [
+            { name: '🌨️ Winter & Nature', prompts: ['The first snow of the year','Frozen lake','Blizzard stranded together','Winter forest at midnight','Ice that never melts','The longest night','Frost on the windowpane','A fire that keeps going out','Tracks in the snow','The cold that gets inside your bones'] },
+            { name: '🐐 Rauhnächte & Wild Hunt', prompts: ['The veil between worlds is thin','Something follows you home','The Hunt rides tonight',"Don't look out the window after midnight",'A bargain made in the dark','Something answered when you called','You should not have gone into the forest','The old ways must be honored',"A door that wasn't there before","Don't get out of bed if you were already asleep"] },
+            { name: '🕯️ Rituals & Magic', prompts: ['Burning the old year away','A candle that reveals the future','Augury by firelight',"The year's last spell",'Offerings left at the threshold','A name written in ash','The hearth must not go cold','Smoke that takes the shape of something','A wish made at the turning of the year'] },
+            { name: '🐺 Creatures & Folklore', prompts: ['The Krampus comes for the wicked','Something old stirs in the dark','The wild things are abroad tonight','A creature made of snow','He who rides at the head of the Hunt','Wolves howling at the moon','A shapeshifter caught in the cold','The hag of winter demands her due','Spirits of the restless dead'] },
+            { name: '❄️ Atmosphere & Emotion', prompts: ['Warmth found in unexpected places','Two people found each other in the snow','A secret kept all winter','Something lost in the snow','Waiting for the light to return','The silence after the storm','A gift with no sender','Grief during winter','Resting in front of the fireplace'] }
+        ]
+    },
+    {
+        id: 'setting', icon: '🏰', name: 'Setting / Location', obligatory: false,
+        subcategories: [
+            { name: '🏰 Indoor & Domestic', prompts: ['By the fireplace','A cozy bedroom','A kitchen at dawn','A library','A hidden room','A dark basement','A chaotic greenhouse','An old laboratory'] },
+            { name: '🌲 Outdoor & Nature', prompts: ['A frozen forest','An old graveyard','A small village','An abandoned place','A clearing in the woods','An old mansion','A beautiful garden','A remote cabin in the woods','A crumbling castle','An inn during a snowstorm','A lighthouse by the sea','A garden maze'] },
+            { name: '🌆 Urban & Other', prompts: ['A city that never sleeps','A marketplace','A train delayed by snow','A church','A tower room in a castle','A harbor','A festival','A concert','The road between two cities','A bookshop'] },
+            { name: '✨ Magical & Liminal', prompts: ['A place that only exists in winter','A mirror that shows another place','The road the Hunt travels','A ritual circle','A place outside of time','A hidden sanctuary','The edge of the known world','An island that appears and disappears'] }
+        ]
+    },
+    {
+        id: 'au', icon: '🌟', name: 'AU (Alternate Universe)', obligatory: false,
+        prompts: ['Omegaverse','Soulmates','No Powers AU','Coffee Shop AU','College/University AU','Royalty AU','Mafia AU','Pirates AU','Historical AU','Modern AU','Celebrity AU','Bookshop AU','Dystopian AU','Rival Business Owners AU','Spy AU','Sports AU','Band/Musicians AU','Tattoo Artist AU','Florist AU','Canon Divergence','Road Trip AU','Time Loop AU','Reincarnation AU','Angel/Demon AU','Assassin AU','Circus AU','Fairy Tale AU','Gothic AU','Apocalypse AU','Small Town AU','Ghost AU','Healer/Patient AU','Teacher/Student AU','Zombie AU','Time Travel Fix-it AU','Fantasy AU','Sci-fi AU','Urban Fantasy AU','Creatures AU','Bodyguard AU','Captive AU','Slave AU','Villain/Hero AU','Monster/Human AU']
+    },
+    {
+        id: 'tropes', icon: '📜', name: 'Tropes', obligatory: false,
+        prompts: ['Arranged Marriage','Forced Marriage','War Prize','Political Alliance','Marriage Law','Jealousy/Possessiveness','Secret Relationship','Truth or Dare','Caught in the Act','Forced Proximity','Forced to Work Together','Locked in a Room','Handcuffed Together','Undercover Mission Together','Partnered for Class Project','Sharing Living Space','Mistaken Identity','Pretend Relationship','Accidental Bonding','Found Family','Single Parent','Roommates','Childhood Friends Reunited','One Night Stand','Amnesia','Chosen Family','Sharing a Bed','Stranded Together','Slow Burn','Opposites Attract','Age Gap','Power Imbalance','Revenge','Obsession','Dark Obsession','Fake Identity','Unexpected Inheritance','Forced Cohabitation','Creature Inheritance','Magical Bond']
+    },
+    {
+        id: 'romance', icon: '💕', name: 'Romance', obligatory: false,
+        prompts: ['First Kiss','Fake Dating','Friends to Lovers','Enemies to Lovers','Rivals to Lovers','One Bed','Slow Burn','Love at First Sight','Forbidden Love','Second Chance Romance','Pining','Unrequited Love','Unrequited Love (that becomes requited)','Secret Admirer','Love Confession','Courting Rituals','First Date','Protective Behavior','Jealous Partner','Cuddling/Snuggling','Hand Holding','Love Letters','Romantic Gesture','Dancing Together','Stargazing','Sharing a Meal','Forehead Kisses','Late Night Conversations','Almost Kiss','Stolen Glances','Mutual Pining','Love Triangle','Grumpy/Sunshine','Undercover Romance','Soft Touches','Whispered Confessions','Morning After','Comfort in Each Other','Forbidden Touches','Anniversary',"First 'I Love You'",'Making Up After a Fight','Flirting Lessons']
+    },
+    {
+        id: 'creatures', icon: '🐺', name: 'Creatures', obligatory: false,
+        prompts: ['Vampire','Werewolf','Dragon','Naga/Snake Creature','Incubus/Succubus','Fae/Fairy','Merman/Siren','Phoenix','Basilisk','Angel','Demon','Centaur','Shadow Creature','Elemental Being','Hybrid Creature','Unicorn','Witch/Warlock','Shapeshifter','Kitsune','Selkie','Harpy','Sphinx','Chimera','Wendigo','Banshee','Ghost/Spirit','Lich','Golem','Djinn/Genie','Necromancer','Dryad/Nature Spirit','Sea Monster','Giant','Gargoyle']
+    },
+    {
+        id: 'nsfw', icon: '🔥', name: 'NSFW', obligatory: false,
+        prompts: ['Aftercare','Sex in front of the fireplace','First heat','First time','Morning sex','Shower/Bath sex','Desk sex','Against the wall','Loss of virginity','First time together','Marking/Claiming','Outdoor sex','Car sex','Kitchen sex','Sex With Feelings','Sex Pollen','Aphrodisiac','Making out','Masturbation','Missionary position','Mutual masturbation','Phone sex','Tender sex','Drunk sex','Hate sex','Orgy','Pleasure party','Sex work']
+    },
+    {
+        id: 'kinks', icon: '🔗', name: 'Kinks', obligatory: false,
+        prompts: ['69','Anal sex','Begging','BDSM','Biting','Blow jobs','Body worship','Breeding (consensual)','Clothed sex','Comfort sex','Coming in pants','Coming untouched','Cunnilingus','Deepthroating','Dildo','Dirty talk','Doggy style','Dom/sub','Double penetration','Dry humping','Edging','Exhibitionism','Face sitting','Fingering','Fingers in mouth','First time bottoming','First time topping','Frottage','Hand jobs','Handcuffs','Hickeys','Kink discovery','Kneeling','Knotting','Multiple orgasms','Nipple play','Oral fixation','Orgasm denial','Overstimulation','Pegging','Power bottom','Praise kink','Public sex','Semi-public sex','Rimming','Roleplay','Rough sex','Sensation play','Service kink','Sex toys','Spanking','Thigh riding','Threesome','Vibrators','Voice kink','Voyeurism','Cockwarming','Big dick','Small dick','Identity porn','Male vagina','Male lactation','Breastfeeding','Daddy kink','Mummy kink','Sugar daddy','Sugar mummy','Sex lessons','Lingerie','No body hair','Too much body hair','Pregnant kink','Cuckolding']
+    },
+    {
+        id: 'deaddove', icon: '⚠️', name: 'Dead Dove', obligatory: false,
+        warning: '⚠️ Contains dark/non-consensual themes. 18+ only.',
+        prompts: ['Non-con','Dub-con','Sex Slave','Non-con Body Modification','Dark Rituals','Kidnapping/Captivity','Mind Control','Breeding (non-con)','Torture','Stockholm Syndrome','Dark Magic Bonding','Forced Transformation','Blood','Dark Sacrificial','Dark Possessiveness','Obsession/Yandere','Gaslighting','Manipulation','Power Imbalance (extreme)','Dehumanization','Forced Proximity (dark version)','Predator/Prey (non-con)','Revenge Sex','Humiliation (extreme)','Ownership/Property','Dark Claiming Marks','Blackmail','Coercion','Stalking','Gore','Cannibalism','Incest','Eating disorders','Abuse (physical)','Abuse (emotional)','Abuse (sexual)','Toxic relationship','Codependency (dark)','Drugging','Human trafficking','Forced addiction','Body horror','Psychological torture','Brainwashing','Sadism/Masochism (extreme)','Corruption','Knifeplay','Bloodplay','Breathplay','Gangbang','Sleep sex']
+    }
+];
+
+// ════════════════════════════════════════════════
+// GOOGLE SHEETS — CHECK & CONSUME
+// ════════════════════════════════════════════════
+async function checkUser() {
+    const username = document.getElementById('loginUsername').value.trim();
+    const msgEl = document.getElementById('loginMsg');
+
+    if (!username) {
+        msgEl.innerHTML = `<div class="msg-error">❌ ${lang === 'es' ? 'Introduce tu username.' : 'Please enter your username.'}</div>`;
+        return;
+    }
+
+    msgEl.innerHTML = `<div class="msg-loading">${t('loading')}</div>`;
+    document.getElementById('loginBtn').disabled = true;
+
+    try {
+        const url = `${SCRIPT_URL}?action=check&username=${encodeURIComponent(username)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.status === 'not_found') {
+            msgEl.innerHTML = `<div class="msg-error">${t('errNotFound')}</div>`;
+            document.getElementById('loginBtn').disabled = false;
+            return;
+        }
+        if (data.status === 'no_uses') {
+            msgEl.innerHTML = `<div class="msg-error">${t('errNoUses')}</div>`;
+            document.getElementById('loginBtn').disabled = false;
+            return;
+        }
+        if (data.status === 'ok') {
+            currentUser = { username: data.username, usesLeft: data.uses_left };
+            msgEl.innerHTML = '';
+            document.getElementById('loginPanel').style.display = 'none';
+            document.getElementById('mainForm').style.display = 'block';
+            updateUserBar();
+            renderCategories();
+        }
+    } catch(e) {
+        msgEl.innerHTML = `<div class="msg-error">${t('errServer')}</div>`;
+        document.getElementById('loginBtn').disabled = false;
+    }
+}
+
+async function consumeUse() {
+    try {
+        const url = `${SCRIPT_URL}?action=use&username=${encodeURIComponent(currentUser.username)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        if (data.status === 'ok') {
+            currentUser.usesLeft = data.uses_left;
+            updateUserBar();
+            return true;
+        }
+        return false;
+    } catch(e) {
+        return false;
+    }
+}
+
+function updateUserBar() {
+    document.getElementById('userBarName').innerHTML =
+        `🌙 ${currentUser.username}`;
+    document.getElementById('userBarUses').innerHTML =
+        `<span class="uses-pill">${currentUser.usesLeft} ${t('usesLeft')}</span>`;
+}
+
+// ════════════════════════════════════════════════
+// CATEGORIES
+// ════════════════════════════════════════════════
+function renderCategories() {
+    const container = document.getElementById('categoriesContainer');
+    container.innerHTML = '';
+
+    categories.forEach(cat => {
+        const section = document.createElement('div');
+        section.className = 'cat-section';
+
+        const badge = cat.obligatory
+            ? `<span class="cat-badge badge-req">${t('catOblig')}</span>`
+            : `<span class="cat-badge badge-opt">${t('catOpt')}</span>`;
+
+        section.innerHTML = `
+            <div class="cat-header${cat.obligatory ? ' obligatory' : ''}" id="hdr-${cat.id}" onclick="toggleCat('${cat.id}')">
+                <div class="cat-left">
+                    <span>${cat.icon}</span>
+                    <span class="cat-name">${cat.name}</span>
+                    ${badge}
+                    <span class="cat-count" id="cnt-${cat.id}">0${t('countSel')}</span>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="cat-body" id="body-${cat.id}">
+                <div class="cat-body-inner" id="inner-${cat.id}"></div>
+            </div>
+        `;
+        container.appendChild(section);
+
+        const inner = document.getElementById('inner-' + cat.id);
+
+        if (cat.warning) {
+            const warn = document.createElement('p');
+            warn.style.cssText = 'color:#c08060;font-style:italic;font-size:0.85em;margin-bottom:14px;';
+            warn.textContent = cat.warning;
+            inner.appendChild(warn);
+        }
+
+        const minP = document.createElement('p');
+        minP.className = 'picks-notice';
+        minP.textContent = cat.obligatory
+            ? '🎲 Mark all you like — the app will randomly pick 1–2 for your card. Min. 3 required.'
+            : '🎲 Optional: if you mark any prompts here, the app will randomly pick 1–2. Min. 3 required if you participate.';
+        inner.appendChild(minP);
+
+        const controls = document.createElement('div');
+        controls.className = 'cat-controls';
+        controls.innerHTML = `
+            <button class="cat-ctrl-btn" onclick="selectAll('${cat.id}')">${t('allSelect')}</button>
+            <button class="cat-ctrl-btn" onclick="deselectAll('${cat.id}')">${t('allDeselect')}</button>
+        `;
+        inner.appendChild(controls);
+
+        if (cat.subcategories) {
+            cat.subcategories.forEach(sub => {
+                const subTitle = document.createElement('p');
+                subTitle.className = 'subcategory-title';
+                subTitle.textContent = sub.name;
+                inner.appendChild(subTitle);
+                inner.appendChild(makeGrid(cat.id, sub.prompts, sub.name));
+            });
+        } else {
+            inner.appendChild(makeGrid(cat.id, cat.prompts.map(p => typeof p === 'string' ? p : p.text)));
+        }
+
+        updateCount(cat.id);
+    });
+}
+
+function makeGrid(catId, prompts, subName = '') {
+    const grid = document.createElement('div');
+    grid.className = 'prompts-grid';
+    prompts.forEach((p, i) => {
+        const pid = `${catId}__${subName.replace(/\W+/g,'_')}__${i}`;
+        const item = document.createElement('div');
+        item.className = 'prompt-item';
+        item.innerHTML = `
+            <input type="checkbox" id="${pid}" data-cat="${catId}" value="${p}" onchange="updateCount('${catId}')">
+            <label for="${pid}">${p}</label>
+        `;
+        grid.appendChild(item);
+    });
+    return grid;
+}
+
+function toggleCat(id) {
+    document.getElementById('hdr-' + id).classList.toggle('open');
+    document.getElementById('body-' + id).classList.toggle('open');
+}
+
+function getSelected(catId) {
+    return [...document.querySelectorAll(`input[data-cat="${catId}"]:checked`)].map(c => c.value);
+}
+
+function updateCount(catId) {
+    const n = getSelected(catId).length;
+    const el = document.getElementById('cnt-' + catId);
+    if (el) el.textContent = n + t('countSel');
+}
+
+function updateAllCounts() {
+    categories.forEach(cat => updateCount(cat.id));
+}
+
+function selectAll(catId) {
+    document.querySelectorAll(`input[data-cat="${catId}"]`).forEach(c => c.checked = true);
+    updateCount(catId);
+}
+
+function deselectAll(catId) {
+    document.querySelectorAll(`input[data-cat="${catId}"]`).forEach(c => c.checked = false);
+    updateCount(catId);
+}
+
+// ════════════════════════════════════════════════
+// GENERATE CARD
+// ════════════════════════════════════════════════
+async function generateCard() {
+    const msgEl = document.getElementById('formMsg');
+    msgEl.innerHTML = '';
+
+    // Validate
+    for (const cat of categories) {
+        const sel = getSelected(cat.id);
+        if (cat.obligatory && sel.length < 3) {
+            msgEl.innerHTML = `<div class="msg-error">❌ ${t('errOblig')}<strong>${cat.name}</strong></div>`;
+            document.getElementById('hdr-' + cat.id).scrollIntoView({behavior:'smooth', block:'center'});
+            return;
+        }
+        if (!cat.obligatory && sel.length > 0 && sel.length < 3) {
+            msgEl.innerHTML = `<div class="msg-error">❌ ${t('errOptMin')}<strong>${cat.name}</strong></div>`;
+            document.getElementById('hdr-' + cat.id).scrollIntoView({behavior:'smooth', block:'center'});
+            return;
+        }
+    }
+
+    // Build picks: 6 obligatory (2+2+2) + up to 6 optional (one per list)
+    function pickRandom(arr, n) {
+        const shuffled = [...arr].sort(() => Math.random() - 0.5);
+        return shuffled.slice(0, n);
+    }
+
+    // ── Obligatory: genre→2, tone→2, winter→2 = 6 total
+    const obligPickCounts = { genre: 2, tone: 2, winter: 2 };
+    const obligatoryFlat = [];
+    for (const cat of categories) {
+        if (!cat.obligatory) continue;
+        const sel = getSelected(cat.id);
+        if (!sel.length) continue;
+        const target = obligPickCounts[cat.id] ?? 2;
+        const picked = pickRandom(sel, Math.min(target, sel.length));
+        picked.forEach(p => obligatoryFlat.push({ catName: cat.name, icon: cat.icon, text: p }));
+    }
+
+    // ── Optional: one random pick per list (no repeated categories), up to 6
+    const optionalFlat = [];
+    const optCats = categories.filter(c => !c.obligatory && getSelected(c.id).length > 0);
+    const shuffledOptCats = [...optCats].sort(() => Math.random() - 0.5).slice(0, 6);
+    for (const cat of shuffledOptCats) {
+        const sel = getSelected(cat.id);
+        const picked = pickRandom(sel, 1);
+        optionalFlat.push({ catName: cat.name, icon: cat.icon, text: picked[0] });
+    }
+
+    if (!obligatoryFlat.length) {
+        msgEl.innerHTML = `<div class="msg-error">❌ ${t('errNoPrompts')}</div>`;
+        return;
+    }
+
+    // ── Special Card: only if ≥6 Rauhnächte prompts selected
+    const winterSel = getSelected('winter');
+    const makeSpecial = winterSel.length >= 6;
+    let specialPicks = null;
+    if (makeSpecial) {
+        const genrePick  = pickRandom(getSelected('genre'), 1);
+        const tonePick   = pickRandom(getSelected('tone'),  1);
+        const winterPicks = pickRandom(winterSel, 4);
+        specialPicks = {
+            genre:  genrePick[0]  ? { catName: 'Genre',         text: genrePick[0]  } : null,
+            tone:   tonePick[0]   ? { catName: 'Tone / Feel',   text: tonePick[0]   } : null,
+            winter: winterPicks.map(p => ({ text: p }))
+        };
+    }
+
+    // Consume use from server
+    document.getElementById('generateBtn').disabled = true;
+    msgEl.innerHTML = `<div class="msg-loading">${t('loading')}</div>`;
+
+    const ok = await consumeUse();
+    if (!ok) {
+        msgEl.innerHTML = `<div class="msg-error">${t('errServer')}</div>`;
+        document.getElementById('generateBtn').disabled = false;
+        return;
+    }
+
+    msgEl.innerHTML = '';
+    document.getElementById('generateBtn').disabled = false;
+
+    drawCard({ username: currentUser.username, obligatoryFlat, optionalFlat });
+
+    // Special card
+    document.getElementById('specialSection').style.display = 'none';
+    if (makeSpecial && specialPicks) {
+        drawSpecialCard({ username: currentUser.username, specialPicks });
+        document.getElementById('specialSection').style.display = 'block';
+    }
+}
+
+// ════════════════════════════════════════════════
+// CANVAS
+// ════════════════════════════════════════════════
+function drawCard({ username, obligatoryFlat, optionalFlat }) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const CARD_W  = 860;
+    const PAD     = 32;
+    const HEADER_H = 148;
+    const FOOTER_H = 72;
+    const ROW_H    = 54;   // height per prompt row
+    const rows     = Math.max(obligatoryFlat.length, optionalFlat.length, 1);
+    const COL_H    = rows * ROW_H + 60; // col titles + rows
+
+    canvas.width  = CARD_W;
+    canvas.height = HEADER_H + COL_H + FOOTER_H;
+
+    // ── BACKGROUND ───────────────────────────────
+    ctx.fillStyle = '#0d0505';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    // subtle warm noise dots
+    ctx.fillStyle = 'rgba(107,26,26,0.05)';
+    for (let i = 0; i < 80; i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*2, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+    // double border
+    ctx.strokeStyle = '#6b1a1a'; ctx.lineWidth = 2;
+    ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
+    ctx.strokeStyle = 'rgba(107,26,26,0.35)'; ctx.lineWidth = 1;
+    ctx.strokeRect(16, 16, canvas.width-32, canvas.height-32);
+
+    // ── HEADER ───────────────────────────────────
+    // Candles
+    ctx.font = '28px serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('🕯️', 44, 60);
+    ctx.fillText('🕯️', canvas.width - 70, 60);
+
+    // Fest title
+    ctx.fillStyle = '#e8e0d4';
+    ctx.font = 'bold 30px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(t('cardTitle'), canvas.width/2, 58);
+
+    // thin divider
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD*2, 70, canvas.width - PAD*4, 1);
+
+    // username
+    ctx.fillStyle = '#c8b8b0';
+    ctx.font = '500 22px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(username, canvas.width/2, 102);
+
+    // snowflakes
+    ctx.fillStyle = 'rgba(176,184,193,0.15)';
+    ctx.font = '13px serif';
+    ctx.fillText('❄  ✦  ❄  ✦  ❄  ✦  ❄  ✦  ❄  ✦  ❄  ✦  ❄  ✦  ❄', canvas.width/2, 128);
+
+    // bottom header rule
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD, HEADER_H - 10, canvas.width - PAD*2, 1);
+
+    // ── TWO COLUMNS ──────────────────────────────
+    const colStart  = HEADER_H + 8;
+    const colW      = (canvas.width - PAD*2 - 1) / 2;  // 1px for divider
+    const leftX     = PAD;
+    const rightX    = PAD + colW + 1;
+
+    // vertical divider (gradient)
+    const divX = PAD + colW;
+    const divGrad = ctx.createLinearGradient(0, colStart, 0, colStart + COL_H);
+    divGrad.addColorStop(0,   'rgba(107,26,26,0)');
+    divGrad.addColorStop(0.2, 'rgba(107,26,26,0.6)');
+    divGrad.addColorStop(0.8, 'rgba(107,26,26,0.6)');
+    divGrad.addColorStop(1,   'rgba(107,26,26,0)');
+    ctx.fillStyle = divGrad;
+    ctx.fillRect(divX, colStart, 1, COL_H);
+
+    // column title helper
+    function drawColTitle(label, x, w) {
+        ctx.fillStyle = '#8a3a3a';
+        ctx.font = '500 10px "Outfit", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'alphabetic';
+        // letter-spacing sim: space out chars
+        ctx.fillText(label.split('').join(' ').toUpperCase(), x + w/2, colStart + 24);
+        // thin underline
+        ctx.fillStyle = 'rgba(107,26,26,0.4)';
+        ctx.fillRect(x + 8, colStart + 30, w - 16, 1);
+    }
+
+    drawColTitle(t('cardSectionOblig'), leftX,  colW);
+    drawColTitle(t('cardSectionOpt'),   rightX, colW);
+
+    // prompt row helper
+    function drawPromptRow(item, colX, colWidth, rowY) {
+        // diamond accent
+        ctx.fillStyle = '#6b1a1a';
+        ctx.font = '9px serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('◆', colX + 10, rowY + ROW_H/2);
+
+        // category label
+        ctx.fillStyle = '#7a6060';
+        ctx.font = '10px "Outfit", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText(item.catName.toUpperCase(), colX + 24, rowY + 18);
+
+        // prompt text (italic serif)
+        ctx.fillStyle = '#e8e0d4';
+        const textAvail = colWidth - 30;
+        const fz = item.text.length > 45 ? 14 : item.text.length > 28 ? 16 : 18;
+        ctx.font = `italic ${fz}px "Cormorant Garamond", Georgia, serif`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        wrapText(ctx, item.text, colX + 24, rowY + 36, textAvail, fz * 1.25);
+
+        // thin row separator
+        ctx.fillStyle = 'rgba(107,26,26,0.2)';
+        ctx.fillRect(colX + 8, rowY + ROW_H - 2, colWidth - 16, 1);
+    }
+
+    const rowsStart = colStart + 40;
+    obligatoryFlat.forEach((item, i) => {
+        drawPromptRow(item, leftX, colW, rowsStart + i * ROW_H);
+    });
+    optionalFlat.forEach((item, i) => {
+        drawPromptRow(item, rightX, colW, rowsStart + i * ROW_H);
+    });
+
+    // ── FOOTER ───────────────────────────────────
+    const footerTop = canvas.height - FOOTER_H;
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD, footerTop, canvas.width - PAD*2, 1);
+
+    // dates
+    ctx.fillStyle = '#8a3a3a';
+    ctx.font = '500 11px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('✦  DECEMBER 2026 — JANUARY 2027  ✦', canvas.width/2, footerTop + 26);
+
+    // contact
+    ctx.fillStyle = '#7a6060';
+    ctx.font = 'italic 13px "Cormorant Garamond", Georgia, serif';
+    ctx.fillText('syrlainefests@tumblr.com', canvas.width/2, footerTop + 48);
+
+    // ── DISPLAY ─────────────────────────────────
+    const displayCanvas = document.getElementById('cardCanvas');
+    displayCanvas.width  = canvas.width;
+    displayCanvas.height = canvas.height;
+    displayCanvas.getContext('2d').drawImage(canvas, 0, 0);
+    window._cardCanvas = canvas;
+
+    document.getElementById('btnAnother').textContent = t('btnAnother');
+    document.getElementById('resultSection').style.display = 'block';
+    document.getElementById('mainForm').style.display = 'none';
+    document.getElementById('resultSection').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ════════════════════════════════════════════════
+// SPECIAL CARD (Wild Nights Special — single column)
+// ════════════════════════════════════════════════
+function drawSpecialCard({ username, specialPicks }) {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+
+    const CARD_W   = 520;
+    const PAD      = 36;
+    const HEADER_H = 148;
+    const FOOTER_H = 72;
+    const FRAME_H  = 80;   // genre + tone rows
+    const DIV_H    = 24;
+    const W_ROW_H  = 54;   // per winter prompt row
+    const W_ROWS   = specialPicks.winter.length;
+    const CONTENT_H = FRAME_H + DIV_H + W_ROWS * W_ROW_H + 16;
+
+    canvas.width  = CARD_W;
+    canvas.height = HEADER_H + CONTENT_H + FOOTER_H;
+
+    // ── BACKGROUND ──────────────────────────────
+    ctx.fillStyle = '#0d0505';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = 'rgba(107,26,26,0.05)';
+    for (let i = 0; i < 60; i++) {
+        ctx.beginPath();
+        ctx.arc(Math.random()*canvas.width, Math.random()*canvas.height, Math.random()*1.8, 0, Math.PI*2);
+        ctx.fill();
+    }
+
+    // double border
+    ctx.strokeStyle = '#6b1a1a'; ctx.lineWidth = 2;
+    ctx.strokeRect(10, 10, canvas.width-20, canvas.height-20);
+    ctx.strokeStyle = 'rgba(107,26,26,0.3)'; ctx.lineWidth = 1;
+    ctx.strokeRect(16, 16, canvas.width-32, canvas.height-32);
+
+    // ── HEADER ──────────────────────────────────
+    ctx.font = '26px serif';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('🕯️', 38, 56);
+    ctx.fillText('🕯️', canvas.width - 60, 56);
+
+    // fest title
+    ctx.fillStyle = '#e8e0d4';
+    ctx.font = 'bold 26px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.fillText(t('cardTitle'), canvas.width/2, 54);
+
+    // thin divider
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD*2, 65, canvas.width - PAD*4, 1);
+
+    // special badge
+    const badgeW = 180; const badgeH = 20; const badgeX = (canvas.width - badgeW)/2;
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(badgeX, 73, badgeW, badgeH);
+    ctx.fillStyle = '#0d0505';
+    ctx.font = 'bold 9px "Outfit", sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('❄  WILD NIGHTS SPECIAL  ❄', canvas.width/2, 83);
+
+    // username
+    ctx.fillStyle = '#c8b8b0';
+    ctx.font = '500 19px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText(username, canvas.width/2, 112);
+
+    // snowflakes
+    ctx.fillStyle = 'rgba(176,184,193,0.15)';
+    ctx.font = '12px serif';
+    ctx.fillText('❄  ✦  ❄  ✦  ❄  ✦  ❄  ✦  ❄', canvas.width/2, 134);
+
+    // header rule
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD, HEADER_H - 10, canvas.width - PAD*2, 1);
+
+    // ── FRAME (genre + tone) ─────────────────────
+    let curY = HEADER_H + 10;
+
+    function drawFrameRow(item) {
+        // diamond
+        ctx.fillStyle = '#6b1a1a';
+        ctx.font = '9px serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('◆', PAD, curY + 18);
+        // cat label
+        ctx.fillStyle = '#7a5a5a';
+        ctx.font = '10px "Outfit", sans-serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText(item.catName.toUpperCase(), PAD + 16, curY + 13);
+        // text
+        ctx.fillStyle = '#c8b8b0';
+        ctx.font = 'italic 15px "Cormorant Garamond", Georgia, serif';
+        ctx.fillText(item.text, PAD + 16, curY + 30);
+        curY += 38;
+    }
+
+    if (specialPicks.genre) drawFrameRow(specialPicks.genre);
+    if (specialPicks.tone)  drawFrameRow(specialPicks.tone);
+
+    // ── DIVIDER ──────────────────────────────────
+    curY += 4;
+    const dg = ctx.createLinearGradient(0, curY, canvas.width, curY);
+    dg.addColorStop(0,   'rgba(107,26,26,0)');
+    dg.addColorStop(0.3, 'rgba(107,26,26,0.7)');
+    dg.addColorStop(0.7, 'rgba(107,26,26,0.7)');
+    dg.addColorStop(1,   'rgba(107,26,26,0)');
+    ctx.fillStyle = dg;
+    ctx.fillRect(PAD, curY, canvas.width - PAD*2, 1);
+    curY += DIV_H;
+
+    // ── RAUHNÄCHTE PROMPTS ────────────────────────
+    specialPicks.winter.forEach(item => {
+        // diamond
+        ctx.fillStyle = '#8a3a3a';
+        ctx.font = '10px serif';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('◆', PAD, curY + W_ROW_H/2);
+
+        // prompt text — no category label, protagonists
+        const textW = canvas.width - PAD*2 - 20;
+        const fz = item.text.length > 45 ? 15 : item.text.length > 28 ? 17 : 19;
+        ctx.fillStyle = '#f0e8de';
+        ctx.font = `italic ${fz}px "Cormorant Garamond", Georgia, serif`;
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        // simple single-line centering vertically in row
+        ctx.fillText(item.text, PAD + 20, curY + W_ROW_H/2);
+
+        // thin row sep
+        ctx.fillStyle = 'rgba(107,26,26,0.18)';
+        ctx.fillRect(PAD + 8, curY + W_ROW_H - 2, canvas.width - PAD*2 - 16, 1);
+
+        curY += W_ROW_H;
+    });
+
+    // ── FOOTER ───────────────────────────────────
+    const footerTop = canvas.height - FOOTER_H;
+    ctx.fillStyle = '#6b1a1a';
+    ctx.fillRect(PAD, footerTop, canvas.width - PAD*2, 1);
+
+    ctx.fillStyle = '#8a3a3a';
+    ctx.font = '500 10px "Cinzel", Georgia, serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'alphabetic';
+    ctx.fillText('✦  DECEMBER 2026 — JANUARY 2027  ✦', canvas.width/2, footerTop + 24);
+
+    ctx.fillStyle = '#7a6060';
+    ctx.font = 'italic 12px "Cormorant Garamond", Georgia, serif';
+    ctx.fillText('syrlainefests@tumblr.com', canvas.width/2, footerTop + 44);
+
+    // ── DISPLAY ─────────────────────────────────
+    const displayCanvas = document.getElementById('specialCanvas');
+    displayCanvas.width  = canvas.width;
+    displayCanvas.height = canvas.height;
+    displayCanvas.getContext('2d').drawImage(canvas, 0, 0);
+    window._specialCanvas = canvas;
+}
+
+// rounded rect helper
+function roundRect(ctx, x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.lineTo(x + w - r, y);
+    ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+    ctx.lineTo(x + w, y + h - r);
+    ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+    ctx.lineTo(x + r, y + h);
+    ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+    ctx.lineTo(x, y + r);
+    ctx.quadraticCurveTo(x, y, x + r, y);
+    ctx.closePath();
+}
+
+function wrapText(ctx, text, cx, cy, maxW, lineH) {
+    const words = text.split(' ');
+    const lines = [];
+    let cur = '';
+    words.forEach(w => {
+        const test = cur ? cur + ' ' + w : w;
+        if (ctx.measureText(test).width > maxW && cur) { lines.push(cur); cur = w; }
+        else cur = test;
+    });
+    if (cur) lines.push(cur);
+    const totalH = (lines.length-1)*lineH;
+    lines.forEach((l, i) => ctx.fillText(l, cx, cy - totalH/2 + i*lineH));
+}
+
+function downloadCard(canvasId = 'cardCanvas', type = 'standard') {
+    const src = canvasId === 'specialCanvas' ? window._specialCanvas : window._cardCanvas;
+    if (!src) return;
+    const link = document.createElement('a');
+    const suffix = type === 'special' ? '-special' : '';
+    link.download = `${t('downloadName')}${suffix}-${currentUser.username}.png`;
+    link.href = src.toDataURL('image/png');
+    link.click();
+}
+
+function goBackToForm() {
+    if (currentUser.usesLeft <= 0) {
+        document.getElementById('resultSection').style.display = 'none';
+        const noUses = document.createElement('div');
+        noUses.className = 'panel';
+        noUses.innerHTML = `<p style="text-align:center; font-family:'Cormorant Garamond',serif; font-style:italic; color:var(--silver); font-size:1.1em;">${t('errNoUses')}</p>`;
+        document.getElementById('mainForm').appendChild(noUses);
+        document.getElementById('mainForm').style.display = 'block';
+    } else {
+        document.getElementById('resultSection').style.display = 'none';
+        document.getElementById('mainForm').style.display = 'block';
+        window.scrollTo({top:0, behavior:'smooth'});
+    }
+}
+</script>
+</body>
+</html>

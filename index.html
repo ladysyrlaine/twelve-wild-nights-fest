@@ -930,15 +930,15 @@ async function generateCard() {
         picked.forEach(p => obligatoryFlat.push({ catName: cat.name, icon: cat.icon, text: p }));
     }
 
-    // ── Optional: one random pick per list (no repeated categories), up to 6
-    const optionalFlat = [];
-    const optCats = categories.filter(c => !c.obligatory && getSelected(c.id).length > 0);
-    const shuffledOptCats = [...optCats].sort(() => Math.random() - 0.5).slice(0, 6);
-    for (const cat of shuffledOptCats) {
+    // ── Optional: pool ALL selected optional prompts together, pick 6 at random
+    // This way, if only one or two lists are selected they still fill all 6 slots.
+    const optPool = [];
+    for (const cat of categories) {
+        if (cat.obligatory) continue;
         const sel = getSelected(cat.id);
-        const picked = pickRandom(sel, 1);
-        optionalFlat.push({ catName: cat.name, icon: cat.icon, text: picked[0] });
+        sel.forEach(text => optPool.push({ catName: cat.name, icon: cat.icon, text }));
     }
+    const optionalFlat = pickRandom(optPool, 6);
 
     if (!obligatoryFlat.length) {
         msgEl.innerHTML = `<div class="msg-error">❌ ${t('errNoPrompts')}</div>`;
